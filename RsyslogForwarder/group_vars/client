@@ -1,4 +1,4 @@
 ---
 AlphaServerName: alphaserver.mydomain.com
-AlphaServerIP: 10.133.4.32
+AlphaServerIP: x.x.x.x
 AlphaClientName: alphaclient-02.mydomain.com
