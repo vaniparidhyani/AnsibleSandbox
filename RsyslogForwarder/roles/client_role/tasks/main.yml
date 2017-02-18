@@ -1,0 +1,22 @@
+
+- name: Add alphaserver DNS entry
+  shell: grep -q -F '{{ AlphaServerIP }} {{ AlphaServerName }}' /etc/hosts || echo '{{ AlphaServerIP }} {{ AlphaServerName }}' >> /etc/hosts
+
+- name: Setup hostname of client
+  lineinfile: dest=/etc/sysconfig/network regexp="^HOSTNAME=" line="HOSTNAME={{ AlphaClientName }}" state=present
+
+- shell: echo "{{ AlphaClientName }}" > /proc/sys/kernel/hostname
+- service: name=network state=restarted
+
+- name: Install rsyslog daemon
+  yum: pkg=rsyslog state=present
+
+- name: Configure rsyslog to forward logs to Alphaserver
+  lineinfile:
+    dest: /etc/rsyslog.conf
+    line: '*.* @@alphaserver.mydomain.com:10514'
+
+- name: Restart rsyslog daemon
+  service:
+    name: rsyslog
+    state: restarted
