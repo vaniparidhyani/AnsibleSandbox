@@ -14,7 +14,7 @@
 - name: Configure rsyslog to forward logs to Alphaserver
   lineinfile:
     dest: /etc/rsyslog.conf
-    line: '*.* @@alphaserver.mydomain.com:10514'
+    line: '*.* @@{{ AlphaServerName }}:{{ RsyslogPort }}'
 
 - name: Restart rsyslog daemon
   service:
