@@ -1,0 +1,18 @@
+
+- name: Install rsyslog daemon
+  yum: pkg=rsyslog state=present
+
+- name: Configure rsyslog to receive logs from all AlphaClients
+  lineinfile:
+    dest: /etc/rsyslog.conf
+    line: "{{ item.line }}"
+  with_items:
+    - { line: $ModLoad imtcp }
+    - { line: $InputTCPServerRun 10514 }
+    - { line: $template FILENAME,"/var/log/remote/%HOSTNAME%-%fromhost-ip%/syslog.log" }
+    - { line: *.* ?FILENAME }
+
+- name: Restart rsyslog daemon
+  service:
+    name: rsyslog
+    state: restarted
